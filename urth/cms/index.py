@@ -5,6 +5,7 @@ from whoosh.index import create_in, open_dir, exists_in, LockError
 from whoosh.fields import Schema, TEXT, ID, STORED
 from whoosh.query import AndMaybe, Term
 from whoosh.qparser import MultifieldParser
+from jieba.analyse import ChineseAnalyzer
 import nbformat
 import io
 import os
@@ -36,10 +37,11 @@ class Index(object):
             
         if not exists_in(index_path):
             # create an index with the current schema
-            schema = Schema(basename=TEXT(stored=True, field_boost=5.0), 
-                            dirname=ID(stored=True),
-                            path=ID(stored=True, unique=True), 
-                            content=TEXT(stored=False), 
+            analyzer = ChineseAnalyzer()
+            schema = Schema(basename=TEXT(stored=True, field_boost=5.0, analyzer=analyzer),
+                            dirname=ID(stored=True, analyzer=analyzer),
+                            path=ID(stored=True, unique=True, analyzer=analyzer),
+                            content=TEXT(stored=False, analyzer=analyzer),
                             time=STORED)
             self.ix = create_in(index_path, schema)
         else:
