@@ -46,6 +46,7 @@ class InstallCommand(install):
 
 install_requires=[
     'whoosh>=2.7.0, <3.0',
+    'jieba',
 ]
 
 # Use the built-in version of scandir if possible, 
